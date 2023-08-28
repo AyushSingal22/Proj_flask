@@ -1,5 +1,5 @@
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, render_template, request, send_file
 import connection 
 
 app = Flask(__name__)
@@ -11,12 +11,14 @@ def home():
 		data = data_provider.getData(str(query))
 		return jsonify({'data': data})
 
-@app.route('/mongo', methods = ['GET', 'POST'])
+@app.route('/vis', methods = ['GET', 'POST'])
 def home2():
 	if(request.method == 'GET'):
 		query= request.args['q']
 		data = data_provider.getData(str(query))
-		return jsonify({'data': data})
+		bytes_obj=data_provider.data_vis(data)
+		return send_file(bytes_obj,
+                     mimetype='image/png')
 
 
 @app.route('/home/<int:num>', methods = ['GET'])
